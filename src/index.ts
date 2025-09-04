@@ -5,7 +5,9 @@ const app = new Elysia()
   // Hooks
 
   // Routes
-  .get("/", () => "Hello Elysia")
+  .get("/", () => {
+    return { message: "Hello!" }; // json
+  })
 
   // Port
   .listen(3000);
