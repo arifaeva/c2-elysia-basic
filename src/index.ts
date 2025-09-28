@@ -1,21 +1,19 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 
 // type inferring
 const app = new Elysia()
-  // Hooks
 
-  // Routes
-  .get("/", (ctx) => {
-    return { message: "Hello!" }; // json
-  })
-  .get("/products/:productId", (ctx) => {
-    const { productId } = ctx.params;
-    return { message: `You are accessing product ${productId} endpoint!` }; // json
-  })
-  .post("/products", ({ body }) => {
-    console.log(body);
-    return { message: "You are accessing product POST endpoint!" }; // json
-  })
+  .guard((app) =>
+    app
+      .onBeforeHandle(() => {
+        console.log("something");
+      })
+      // Routes
+      .post("/products", ({ set }) => {
+        set.status = 201;
+        return { message: "Hello!" };
+      })
+  )
 
   // Port
   .listen(3000);

@@ -6,9 +6,4 @@ GET http://localhost:3000/products/
 
 ### Post Products
 POST http://localhost:3000/products
-Content-Type: application/json
-
-{
-    "title": "Book 1",
-    "desc": "Book about science"
-}
+Authorization: admin123
