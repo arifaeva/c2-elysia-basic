@@ -1,21 +1,20 @@
 import { Elysia, t } from "elysia";
+import { userRouter } from "./routes/userRoute";
+import { productRouter } from "./routes/productRoute";
+import { revenueRouter } from "./routes/revenueRoute";
 
 // type inferring
 const app = new Elysia()
-
-  .guard((app) =>
+  .onBeforeHandle(() => {
+    // Authorization ???
+  })
+  .group("/api/v1", (app) =>
     app
-      .onBeforeHandle(() => {
-        console.log("something");
-      })
-      // Routes
-      .post("/products", ({ set }) => {
-        set.status = 201;
-        return { message: "Hello!" };
-      })
+      // routes
+      .use(userRouter)
+      .use(productRouter)
+      .use(revenueRouter)
   )
-
-  // Port
   .listen(3000);
 
 console.log(
