@@ -1,19 +1,62 @@
 import { Elysia, t } from "elysia";
-import { userRouter } from "./routes/userRoute";
-import { productRouter } from "./routes/productRoute";
-import { revenueRouter } from "./routes/revenueRoute";
+import { swagger } from "@elysiajs/swagger";
 
 // type inferring
 const app = new Elysia()
-  .onBeforeHandle(() => {
-    // Authorization ???
-  })
-  .group("/api/v1", (app) =>
-    app
-      // routes
-      .use(userRouter)
-      .use(productRouter)
-      .use(revenueRouter)
+  .use(
+    swagger({
+      path: "/docs",
+      scalarConfig: {
+        defaultHttpClient: {
+          targetKey: "javascript",
+          clientKey: "fetch",
+        },
+      },
+    })
+  )
+  // routes
+  .post(
+    "/",
+    () => {
+      return { message: "Hello!" };
+    },
+    {
+      body: t.Object({
+        name: t.String(),
+        desc: t.String(),
+      }),
+      tags: ["products"],
+      detail: {
+        responses: {
+          201: {
+            description: "Create product success",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+          500: {
+            description: "Create product failed",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    errorMessage: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }
   )
   .listen(3000);
 
